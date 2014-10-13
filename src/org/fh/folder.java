@@ -15,6 +15,7 @@ public class folder
 		folderPath = path;
 		MatchRule = new regexRule(".*Image.*");
 		Actions.add(new moveAction());
+		// TODO: Folder not exist handler
 		((moveAction)Actions.get(0)).destination = Paths.get("c:/images/");
 	}
 	public folder(Path path,matchRule rule,ArrayList<action> actions)
