@@ -9,6 +9,7 @@ public class service
 	{
 		watcherService ws = new watcherService();
 
+		configHandler.loadConfig();
 		ws.registerAll(Paths.get("c:/test/"));
 
 		Thread t1 = new Thread(ws);
