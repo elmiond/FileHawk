@@ -2,7 +2,11 @@
 <!-- config.xml -->
 <config>
 	<actionsets>
-	</actionsets>
+		
+		<action>
+			<move></move>
+			<copy></copy>
+			<delete></delete><edit></edit></action></actionsets>
 	<folders>
 		<folder>
 			<path>c:/test/</path>
@@ -11,4 +15,5 @@
 			<path>o</path>
 		</folder>
 	</folders>
-</config>
+	<Matches>
+		<match></match></Matches></config>

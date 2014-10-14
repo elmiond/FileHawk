@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class moveAction implements action
+public class copyAction implements action
 {
 	public Path destination;
 
@@ -24,11 +24,20 @@ public class moveAction implements action
 				Thread.sleep(100);
 				i++;
 			}
-			Files.move( filePath, newFilePath);
-			return new actionReturn("move", newFilePath, true);
+			if (!Files.notExists(newFilePath))
+			{
+				try {
+					Files.createDirectory(newFilePath);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+			Files.copy(filePath, newFilePath);
+			return new actionReturn("copy", newFilePath, true);
+			
 		} catch (IOException | InterruptedException e)
 		{
-			return new actionReturn("move", filePath, false);
+			return new actionReturn("copy", filePath, false);
 		}
 	}
 }
