@@ -2,13 +2,32 @@
 <!-- config.xml -->
 <config>
 	<actionsets>
-		
-		<action></action></actionsets>
+		<actionset>
+			<name></name>
+			<actions>
+				<action>
+					<kind></kind>
+				</action>
+			</actions>
+		</actionset>
+	</actionsets>
 	<folders>
 		<folder>
 			<path>c:/test/</path>
+			<actionsetname></actionsetname>
+			<matchsetname>testregex</matchsetname>
 		</folder>
 		<folder>
 			<path>o</path>
+			<actionsetname></actionsetname>
+			<matchsetname></matchsetname>
 		</folder>
-	</folders></config>
+	</folders>
+	<matches>
+		<match>
+			<name>testregex</name>
+			<kind>regex</kind>
+			<pattern>.*Image.*</pattern>
+		</match>
+	</matches>
+</config>

@@ -6,6 +6,12 @@ import java.nio.file.Path;
 
 public class moveAction implements action
 {
+	public moveAction(Path destination)
+	{
+		super();
+		this.destination = destination;
+	}
+
 	public Path destination;
 
 	public actionReturn doWork(Path filePath)

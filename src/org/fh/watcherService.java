@@ -16,6 +16,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,8 @@ public class watcherService implements Runnable
 	/**
 	 * Register the given directory with the WatchService
 	 */
-	private void register(Path dir) throws IOException
+	private void register(Path dir, matchRule rule, ArrayList<action> actions)
+			throws IOException
 	{
 		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE,
 				ENTRY_MODIFY);
@@ -48,23 +50,23 @@ public class watcherService implements Runnable
 				System.out.format("update: %s -> %s\n", prev, dir);
 			}
 		}
-		folders.put(key, new folder(dir));
+		folders.put(key, new folder(dir, rule, actions));
 	}
 
 	/**
 	 * Register the given directory, and all its sub-directories, with the
 	 * WatchService.
 	 */
-	public void registerAll(final Path start) throws IOException
+	public void registerAll(final folder f) throws IOException
 	{
 		// register directory and sub-directories
-		Files.walkFileTree(start, new SimpleFileVisitor<Path>()
+		Files.walkFileTree(f.folderPath, new SimpleFileVisitor<Path>()
 		{
 			@Override
 			public FileVisitResult preVisitDirectory(Path dir,
 					BasicFileAttributes attrs) throws IOException
 			{
-				register(dir);
+				register(dir, f.MatchRule, f.Actions);
 				return FileVisitResult.CONTINUE;
 			}
 		});
@@ -128,7 +130,7 @@ public class watcherService implements Runnable
 					{
 						if (Files.isDirectory(child, NOFOLLOW_LINKS))
 						{
-							registerAll(child);
+							registerAll(f);
 						} else
 						{
 

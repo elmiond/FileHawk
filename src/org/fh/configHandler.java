@@ -41,19 +41,49 @@ public class configHandler
 	public ArrayList<folder> getFolders() throws ConfigurationException
 	{
 		ArrayList<folder> folders = new ArrayList<folder>();
-
 		String[] ss = config.getStringArray("folders/folder/path");
 		for (String s : ss)
 		{
 			if (Files.exists(Paths.get(s)))
 			{
-				folders.add(new folder(Paths.get(s)));
-			}
-			else
+				String mat = config.getString("folders/folder[path = '" + s
+						+ "']/matchsetname");
+				System.out.println(mat);
+
+				String act = config.getString("folders/folder[path = '" + s
+						+ "']/actionsetname");
+				System.out.println(act);
+
+				folders
+						.add(new folder(Paths.get(s), getMatchRule(mat), getActions(act)));
+			} else
 			{
 				System.out.format("Could not find folder: %s\n", s);
 			}
 		}
 		return folders;
+	}
+
+	private matchRule getMatchRule(String name)
+	{
+		String kind = config.getString("matches/match[name = '" + name + "']/kind");
+		System.out.println(kind);
+		switch (kind)
+		{
+		case "regex":
+			String pattern = config.getString("matches/match[name = '" + name
+					+ "']/pattern");
+			return new regexRule(pattern);
+
+		default:
+			return new regexRule("");
+		}
+	}
+
+	private ArrayList<action> getActions(String name)
+	{
+		ArrayList<action> al = new ArrayList<action>();
+		al.add(new moveAction(Paths.get("c:/images/")));
+		return al;
 	}
 }

@@ -13,7 +13,7 @@ public class service
 		ArrayList<folder> folders = ch.getFolders();
 		for (folder f : folders)
 		{
-			ws.registerAll(f.folderPath);
+			ws.registerAll(f);
 		}
 		
 
