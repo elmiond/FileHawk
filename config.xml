@@ -3,10 +3,7 @@
 <config>
 	<actionsets>
 		
-		<action>
-			<move></move>
-			<copy></copy>
-			<delete></delete><edit></edit></action></actionsets>
+		<action></action></actionsets>
 	<folders>
 		<folder>
 			<path>c:/test/</path>
@@ -14,6 +11,4 @@
 		<folder>
 			<path>o</path>
 		</folder>
-	</folders>
-	<Matches>
-		<match></match></Matches></config>
+	</folders></config>
