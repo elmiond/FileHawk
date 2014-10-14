@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -11,25 +12,48 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
 public class configHandler
 {
-	static Path configFile = Paths.get("config.xml");
+	String configFile = "config.xml";
+	XMLConfiguration config;
 
-	public static boolean loadConfig()
+	public configHandler()
 	{
-		XMLConfiguration config;
 		try
 		{
-			if (Files.notExists(configFile))
+			if (Files.notExists(Paths.get(configFile)))
 			{
-				Files.createFile(configFile);
+				Files.createFile(Paths.get(configFile));
+
+				// TODO tilføj skrivning af en tom basis struktur når når vi ved hvordan
+				// den
+				// skal være
 			}
-			config = new XMLConfiguration(configFile.toString());
+			config = new XMLConfiguration(configFile);
 			config.setExpressionEngine(new XPathExpressionEngine());
-			return true;
-		} catch (ConfigurationException | IOException e)
+
+		} catch (IOException | ConfigurationException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
 		}
+
+	}
+
+	public ArrayList<folder> getFolders() throws ConfigurationException
+	{
+		ArrayList<folder> folders = new ArrayList<folder>();
+
+		String[] ss = config.getStringArray("folders/folder/path");
+		for (String s : ss)
+		{
+			if (Files.exists(Paths.get(s)))
+			{
+				folders.add(new folder(Paths.get(s)));
+			}
+			else
+			{
+				System.out.format("Could not find folder: %s\n", s);
+			}
+		}
+		return folders;
 	}
 }
