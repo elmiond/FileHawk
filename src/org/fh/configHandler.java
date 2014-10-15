@@ -83,7 +83,31 @@ public class configHandler
 	private ArrayList<action> getActions(String name)
 	{
 		ArrayList<action> al = new ArrayList<action>();
-		al.add(new moveAction(Paths.get("c:/images/")));
+
+		String[] kinds = config.getStringArray("actionsets/actionset[name = '"
+				+ name + "']/actions/action/kind");
+
+		int i = 1;
+		for (String kind : kinds)
+		{
+			System.out.println(kind);
+			al.add(getAction(name, i, kind));
+			i++;
+		}
 		return al;
+	}
+
+	private action getAction(String name, int index, String kind)
+	{
+		switch (kind)
+		{
+		case "move":
+
+			return new moveAction(Paths.get(config
+					.getString("actionsets/actionset[name = '" + name
+							+ "']/actions/action[" + index + "]/destination")));
+		default:
+			return new moveAction(Paths.get(""));
+		}
 	}
 }

@@ -3,10 +3,11 @@
 <config>
 	<actionsets>
 		<actionset>
-			<name></name>
+			<name>testmove</name>
 			<actions>
 				<action>
-					<kind></kind>
+					<kind>move</kind>
+					<destination>c:/images/</destination>
 				</action>
 			</actions>
 		</actionset>
@@ -14,7 +15,7 @@
 	<folders>
 		<folder>
 			<path>c:/test/</path>
-			<actionsetname></actionsetname>
+			<actionsetname>testmove</actionsetname>
 			<matchsetname>testregex</matchsetname>
 		</folder>
 		<folder>
