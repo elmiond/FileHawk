@@ -46,16 +46,28 @@ public class configHandler
 		{
 			if (Files.exists(Paths.get(s)))
 			{
-				String mat = config.getString("folders/folder[path = '" + s
-						+ "']/matchsetname");
-				System.out.println(mat);
-
-				String act = config.getString("folders/folder[path = '" + s
-						+ "']/actionsetname");
-				System.out.println(act);
-
-				folders
-						.add(new folder(Paths.get(s), getMatchRule(mat), getActions(act)));
+				ArrayList<ruleSet> rules = new ArrayList<ruleSet>();
+				String[] mat = config.getStringArray("folders/folder[path = '" + s
+						+ "']/rulesets/ruleset/matchsetname");
+				String[] act = config.getStringArray("folders/folder[path = '" + s
+						+ "']/rulesets/ruleset/actionsetname");
+				int i = 0;
+				boolean run = true;
+				while (run)
+				{
+					
+					System.out.println(mat[i]);
+					System.out.println(act[i]);
+					rules.add(new ruleSet(getMatchRule(mat[i]), getActions(act[i])));
+					i++;
+					if (i >= mat.length || i >= act.length)
+					{
+						run = false;
+					}
+				}
+				
+				// getMatchRule(mat), getActions(act)
+				folders.add(new folder(Paths.get(s), rules));
 			} else
 			{
 				System.out.format("Could not find folder: %s\n", s);

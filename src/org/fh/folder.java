@@ -7,13 +7,19 @@ import java.util.ArrayList;
 public class folder
 {
 	Path folderPath;
-	matchRule MatchRule;
-	ArrayList<action> Actions = new ArrayList<action>();
+	ArrayList<ruleSet> rules;
 
-	public folder(Path path, matchRule rule, ArrayList<action> actions)
+	public folder(Path path, ArrayList<ruleSet> rulesets)
 	{
 		folderPath = path;
-		MatchRule = rule;
-		Actions = actions;
+		rules = rulesets;
+	}
+	
+	public void doWork(Path child)
+	{
+		for (ruleSet rule : rules)
+		{
+			rule.doWork(child);
+		}
 	}
 }

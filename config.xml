@@ -3,7 +3,7 @@
 <config>
 	<actionsets>
 		<actionset>
-			<name>testmove</name>
+			<name>movetoimages</name>
 			<actions>
 				<action>
 					<kind>move</kind>
@@ -11,24 +11,50 @@
 				</action>
 			</actions>
 		</actionset>
+		<actionset>
+			<name>movetodocuments</name>
+			<actions>
+				<action>
+					<kind>move</kind>
+					<destination>c:/documents/</destination>
+				</action>
+			</actions>
+		</actionset>
 	</actionsets>
 	<folders>
 		<folder>
 			<path>c:/test/</path>
-			<actionsetname>testmove</actionsetname>
-			<matchsetname>testregex</matchsetname>
+			<rulesets>
+				<ruleset>
+					<matchsetname>imagesregex</matchsetname>
+					<actionsetname>movetoimages</actionsetname>
+				</ruleset>
+				<ruleset>
+					<matchsetname>documentsregex</matchsetname>
+					<actionsetname>movetodocuments</actionsetname>
+				</ruleset>
+			</rulesets>
 		</folder>
 		<folder>
 			<path>o</path>
-			<actionsetname></actionsetname>
-			<matchsetname></matchsetname>
+			<rulesets>
+				<ruleset>
+					<matchsetname></matchsetname>
+					<actionsetname></actionsetname>
+				</ruleset>
+			</rulesets>
 		</folder>
 	</folders>
 	<matches>
 		<match>
-			<name>testregex</name>
+			<name>imagesregex</name>
 			<kind>regex</kind>
 			<pattern>.*Image.*</pattern>
+		</match>
+		<match>
+			<name>documentsregex</name>
+			<kind>regex</kind>
+			<pattern>.*Document.*</pattern>
 		</match>
 	</matches>
 </config>

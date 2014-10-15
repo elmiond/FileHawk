@@ -34,7 +34,7 @@ public class watcherService implements Runnable
 	/**
 	 * Register the given directory with the WatchService
 	 */
-	private void register(Path dir, matchRule rule, ArrayList<action> actions)
+	private void register(Path dir, ArrayList<ruleSet> rules)
 			throws IOException
 	{
 		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE,
@@ -50,7 +50,7 @@ public class watcherService implements Runnable
 				System.out.format("update: %s -> %s\n", prev, dir);
 			}
 		}
-		folders.put(key, new folder(dir, rule, actions));
+		folders.put(key, new folder(dir, rules));
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class watcherService implements Runnable
 			public FileVisitResult preVisitDirectory(Path dir,
 					BasicFileAttributes attrs) throws IOException
 			{
-				register(dir, f.MatchRule, f.Actions);
+				register(dir, new ArrayList<ruleSet>(f.rules));
 				return FileVisitResult.CONTINUE;
 			}
 		});
@@ -144,18 +144,19 @@ public class watcherService implements Runnable
 				{
 					if (!Files.isDirectory(child, NOFOLLOW_LINKS))
 					{
-						if (f.MatchRule.isMatch(child))
-						{
-							System.out.println("Matched: " + child);
-							for (action a : f.Actions)
-							{
-								actionReturn aR = a.doWork(child);
-								if (aR.wasSuccess)
-								{
-									System.out.println("Success, new path: " + aR.newFilePath);
-								}
-							}
-						}
+						f.doWork(child);
+//						if (f.MatchRule.isMatch(child))
+//						{
+//							System.out.println("Matched: " + child);
+//							for (action a : f.Actions)
+//							{
+//								actionReturn aR = a.doWork(child);
+//								if (aR.wasSuccess)
+//								{
+//									System.out.println("Success, new path: " + aR.newFilePath);
+//								}
+//							}
+//						}
 					}
 				}
 			}
