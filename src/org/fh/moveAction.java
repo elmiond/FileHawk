@@ -6,13 +6,13 @@ import java.nio.file.Path;
 
 public class moveAction implements action
 {
+	public Path destination;
+
 	public moveAction(Path destination)
 	{
 		super();
 		this.destination = destination;
 	}
-
-	public Path destination;
 
 	public actionReturn doWork(Path filePath)
 	{
@@ -30,7 +30,18 @@ public class moveAction implements action
 				Thread.sleep(100);
 				i++;
 			}
-			Files.move( filePath, newFilePath);
+
+			i = 1;
+			while (newFilePath.toFile().exists())
+			{
+				String name = filePath.getFileName().toString();
+				int index = name.contains(".") ? name.lastIndexOf('.') : name.length();
+				newFilePath = destination.resolve(name.substring(0, index) + " (" + i
+						+ ")" + name.substring(index));
+				i++;
+			}
+
+			Files.move(filePath, newFilePath);
 			return new actionReturn("move", newFilePath, true);
 		} catch (IOException | InterruptedException e)
 		{

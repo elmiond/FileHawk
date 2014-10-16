@@ -15,7 +15,7 @@
 			<name>movetodocuments</name>
 			<actions>
 				<action>
-					<kind>move</kind>
+					<kind>copy</kind>
 					<destination>c:/documents/</destination>
 				</action>
 			</actions>

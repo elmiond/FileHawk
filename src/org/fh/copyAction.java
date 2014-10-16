@@ -8,6 +8,12 @@ public class copyAction implements action
 {
 	public Path destination;
 
+	public copyAction(Path destination)
+	{
+		super();
+		this.destination = destination;
+	}
+
 	public actionReturn doWork(Path filePath)
 	{
 		Path newFilePath = destination.resolve(filePath.getFileName());
@@ -32,6 +38,17 @@ public class copyAction implements action
 					// TODO: handle exception
 				}
 			}
+			
+			i = 1;
+			while (newFilePath.toFile().exists())
+			{
+				String name = filePath.getFileName().toString();
+				int index = name.contains(".") ? name.lastIndexOf('.') : name.length();
+				newFilePath = destination.resolve(name.substring(0, index) + " (" + i
+						+ ")" + name.substring(index));
+				i++;
+			}
+			
 			Files.copy(filePath, newFilePath);
 			return new actionReturn("copy", newFilePath, true);
 			

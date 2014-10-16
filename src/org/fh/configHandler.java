@@ -55,7 +55,7 @@ public class configHandler
 				boolean run = true;
 				while (run)
 				{
-					
+
 					System.out.println(mat[i]);
 					System.out.println(act[i]);
 					rules.add(new ruleSet(getMatchRule(mat[i]), getActions(act[i])));
@@ -65,7 +65,7 @@ public class configHandler
 						run = false;
 					}
 				}
-				
+
 				// getMatchRule(mat), getActions(act)
 				folders.add(new folder(Paths.get(s), rules));
 			} else
@@ -114,10 +114,15 @@ public class configHandler
 		switch (kind)
 		{
 		case "move":
-
 			return new moveAction(Paths.get(config
 					.getString("actionsets/actionset[name = '" + name
 							+ "']/actions/action[" + index + "]/destination")));
+
+		case "copy":
+			return new copyAction(Paths.get(config
+					.getString("actionsets/actionset[name = '" + name
+							+ "']/actions/action[" + index + "]/destination")));
+
 		default:
 			return new moveAction(Paths.get(""));
 		}
