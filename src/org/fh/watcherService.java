@@ -34,8 +34,7 @@ public class watcherService implements Runnable
 	/**
 	 * Register the given directory with the WatchService
 	 */
-	private void register(Path dir, ArrayList<ruleSet> rules)
-			throws IOException
+	private void register(Path dir, ArrayList<ruleSet> rules) throws IOException
 	{
 		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE,
 				ENTRY_MODIFY);
@@ -133,7 +132,7 @@ public class watcherService implements Runnable
 							registerAll(f);
 						} else
 						{
-
+							f.doWork(child);
 						}
 					} catch (IOException x)
 					{
@@ -145,18 +144,6 @@ public class watcherService implements Runnable
 					if (!Files.isDirectory(child, NOFOLLOW_LINKS))
 					{
 						f.doWork(child);
-//						if (f.MatchRule.isMatch(child))
-//						{
-//							System.out.println("Matched: " + child);
-//							for (action a : f.Actions)
-//							{
-//								actionReturn aR = a.doWork(child);
-//								if (aR.wasSuccess)
-//								{
-//									System.out.println("Success, new path: " + aR.newFilePath);
-//								}
-//							}
-//						}
 					}
 				}
 			}
