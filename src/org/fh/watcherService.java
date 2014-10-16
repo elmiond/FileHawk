@@ -11,6 +11,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -123,28 +124,33 @@ public class watcherService implements Runnable
 
 				// if directory is created, and watching recursively, then
 				// register it and its sub-directories
-				if (kind == ENTRY_CREATE)
+				if (!child.getFileName().toString().startsWith("~"))
 				{
-					try
+
+					if (kind == ENTRY_CREATE)
 					{
-						if (Files.isDirectory(child, NOFOLLOW_LINKS))
+						try
 						{
-							registerAll(f);
-						} else
+							if (Files.isDirectory(child, NOFOLLOW_LINKS))
+							{
+								registerAll(f);
+							} else
+							{
+								f.doWork(child);
+							}
+						} catch (IOException x)
+						{
+							// ignore to keep sample readable
+						}
+					}
+					if (kind == ENTRY_MODIFY)
+					{
+						if (!Files.isDirectory(child, NOFOLLOW_LINKS))
 						{
 							f.doWork(child);
 						}
-					} catch (IOException x)
-					{
-						// ignore to keep sample readable
 					}
-				}
-				if (kind == ENTRY_MODIFY)
-				{
-					if (!Files.isDirectory(child, NOFOLLOW_LINKS))
-					{
-						f.doWork(child);
-					}
+
 				}
 			}
 
