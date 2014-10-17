@@ -13,7 +13,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Collections;
 import java.util.EnumSet;
 
-public class fileUserPermission
+public class fileUserPermission implements action
 {
 	public Path destination;
 	public AclEntryType permission;
@@ -29,18 +29,16 @@ public class fileUserPermission
 		} catch (UserPrincipalNotFoundException e) {
 			// TODO: handle exception
 		}
-			
 	}
-
-	public actionReturn doWork(Path file, UserPrincipal userName, AclEntryType perm)
-	{
+	
+	@Override
+	public actionReturn doWork(Path destination) {
 		AclEntry.Builder builder;
 		AclFileAttributeView aclAttr;
 		try {
-			aclAttr = Files.getFileAttributeView(file, AclFileAttributeView.class);
+			aclAttr = Files.getFileAttributeView(destination, AclFileAttributeView.class);
 		} catch (FileSystemNotFoundException e) {
-			//TODO: handle exception
-			return new actionReturn("User permission(" + perm.toString() + ") for " + userName.toString() + " Added", file, false);
+			return new actionReturn("User permission(" + permission.toString() + ") for " + user.toString() + " Added", destination, false);
 		} try {
 	    	builder = AclEntry.newBuilder();       
 		    builder.setPermissions( EnumSet.of(AclEntryPermission.READ_DATA, AclEntryPermission.EXECUTE, 
@@ -48,16 +46,14 @@ public class fileUserPermission
 		            AclEntryPermission.WRITE_ACL, AclEntryPermission.DELETE
 		    ));
 		} catch (Exception e) {
-			// TODO: handle exception
-			return new actionReturn("User permission(" + perm.toString() + ") for " + userName.toString() + " Added", file, false);
+			return new actionReturn("User permission(" + permission.toString() + ") for " + user.toString() + " Added", destination, false);
 		} try {
 	    	builder.setPrincipal(user);
 		    builder.setType(permission);
 		    aclAttr.setAcl(Collections.singletonList(builder.build()));
 		} catch (IOException e) {
-			// TODO: handle exception
-			return new actionReturn("User permission(" + perm.toString() + ") for " + userName.toString() + " Added", file, false); 
+			return new actionReturn("User permission(" + permission.toString() + ") for " + user.toString() + " Added", destination, false); 
 		}
-		return new actionReturn("User permission(" + perm.toString() + ") for " + userName.toString() + " Added", file, true);   
+		return new actionReturn("User permission(" + permission.toString() + ") for " + user.toString() + " Added", destination, true);   
 	}	
 }
