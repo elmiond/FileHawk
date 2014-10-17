@@ -6,6 +6,13 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 public class deleteAction implements action
 {
+	public Path destination;
+
+	public deleteAction(Path destination)
+	{
+		super();
+		this.destination = destination;
+	}
 
 	public actionReturn doWork(Path filePath)
 	{
