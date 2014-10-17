@@ -9,12 +9,8 @@ public class service
 	{
 		watcherService ws = new watcherService();
 
-		configHandler ch = new configHandler();
-		ArrayList<folder> folders = ch.getFolders();
-		for (folder f : folders)
-		{
-			ws.registerAll(f);
-		}
+		
+		
 		
 
 		Thread t1 = new Thread(ws);

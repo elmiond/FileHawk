@@ -21,10 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.ConfigurationException;
+
 public class watcherService implements Runnable
 {
 	private final WatchService watcher;
 	private Map<WatchKey, folder> folders = new HashMap<WatchKey, folder>();
+	private final Path config = Paths.get("config.xml");
+	private configHandler ch = new configHandler();
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event)
@@ -85,16 +89,8 @@ public class watcherService implements Runnable
 	 */
 	public void run()
 	{
-		Path config = Paths.get("config.xml");
-		ArrayList<ruleSet> r = new ArrayList<ruleSet>();
-		try
-		{
-			register(config.toAbsolutePath().getParent(), r);
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		loadConfig();
+		
 		while (true)
 		{
 
@@ -108,7 +104,7 @@ public class watcherService implements Runnable
 				return;
 			}
 			folder f = folders.get(key);
-			if (f.folderPath == null)
+			if (f == null || f.folderPath == null)
 			{
 				System.err.println("WatchKey not recognized!!");
 				continue;
@@ -138,10 +134,13 @@ public class watcherService implements Runnable
 				// child.getFileName().toString().equals("config.xml")
 				if (child.toAbsolutePath().equals(config.toAbsolutePath()))
 				{
-					//discard events for FileHawk root dir not pertaining to the config file
+					// discard events for FileHawk root dir not pertaining to the config
+					// file
 					if (child.getFileName().toString().equals("config.xml"))
 					{
 						System.out.println("config changed");
+						clearWatchlist();
+						loadConfig();
 					}
 				} else if (!child.getFileName().toString().startsWith("~"))
 				{
@@ -184,6 +183,35 @@ public class watcherService implements Runnable
 					break;
 				}
 			}
+		}
+	}
+
+	public void clearWatchlist()
+	{
+		//folders = new HashMap<WatchKey, folder>();
+		folders.clear();
+//		for (Map.Entry<WatchKey, folder> entry : folders.entrySet())
+//		{
+//			folders.remove(entry.getKey());
+//		}
+	}
+
+	public void loadConfig()
+	{
+		configHandler ch = new configHandler();
+		ArrayList<folder> folders;
+		try
+		{
+			register(config.toAbsolutePath().getParent(), new ArrayList<ruleSet>());
+			folders = ch.getFolders();
+			for (folder f : folders)
+			{
+				registerAll(f);
+			}
+		} catch (ConfigurationException | IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
