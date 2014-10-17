@@ -85,6 +85,16 @@ public class watcherService implements Runnable
 	 */
 	public void run()
 	{
+		Path config = Paths.get("config.xml");
+		ArrayList<ruleSet> r = new ArrayList<ruleSet>();
+		try
+		{
+			register(config.toAbsolutePath().getParent(), r);
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		while (true)
 		{
 
@@ -124,7 +134,16 @@ public class watcherService implements Runnable
 
 				// if directory is created, and watching recursively, then
 				// register it and its sub-directories
-				if (!child.getFileName().toString().startsWith("~"))
+
+				// child.getFileName().toString().equals("config.xml")
+				if (child.toAbsolutePath().equals(config.toAbsolutePath()))
+				{
+					//discard events for FileHawk root dir not pertaining to the config file
+					if (child.getFileName().toString().equals("config.xml"))
+					{
+						System.out.println("config changed");
+					}
+				} else if (!child.getFileName().toString().startsWith("~"))
 				{
 
 					if (kind == ENTRY_CREATE)
